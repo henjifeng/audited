@@ -38,5 +38,9 @@ module Audited
     def controller=(value)
       store[:current_controller] = value
     end
+
+    def request_uuid_type
+      Current.request_uuid_type
+    end
   end
 end

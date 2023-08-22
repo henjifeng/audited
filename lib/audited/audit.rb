@@ -15,6 +15,10 @@ module Audited
   # * <tt>created_at</tt>: Time that the change was performed
   #
 
+
+  # custom filed
+  # * <tt>request_uuid_type</tt>: a uuid type based that allows audits from the same controller request, ex: SALES, QUOTE from NetsuiteSalesOrder
+
   class YAMLIfTextColumnType
     class << self
       def load(obj)
@@ -44,7 +48,7 @@ module Audited
     belongs_to :user, polymorphic: true
     belongs_to :associated, polymorphic: true
 
-    before_create :set_version_number, :set_audit_user, :set_request_uuid, :set_remote_address
+    before_create :set_version_number, :set_audit_user, :set_request_uuid, :set_remote_address, :set_request_uuid_type
 
     cattr_accessor :audited_class_names
     self.audited_class_names = Set.new
@@ -189,6 +193,10 @@ module Audited
     def set_request_uuid
       self.request_uuid ||= ::Audited.store[:current_request_uuid]
       self.request_uuid ||= SecureRandom.uuid
+    end
+
+    def set_request_uuid_type
+      self.request_uuid_type ||= ::Audited.store[:current_request_uuid_type]
     end
 
     def set_remote_address
